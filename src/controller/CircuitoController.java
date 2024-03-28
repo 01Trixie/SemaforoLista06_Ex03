@@ -2,11 +2,11 @@ package controller;
 
 import java.util.concurrent.Semaphore;
 
-public class CircuitoController extends Thread {
-	private int idAtleta;
+public class CircuitoController extends Thread implements Comparable <CircuitoController>{
+	public int idAtleta;
 	private Semaphore semaforo;
-	private static int posChegada;
-	private int pontos = 260;
+	public static int posChegada;
+	public int pontos = 0;
 	public CircuitoController(int idAtleta, Semaphore semaforo) {
 		this.idAtleta = idAtleta;
 		this.semaforo = semaforo;
@@ -45,8 +45,10 @@ public class CircuitoController extends Thread {
 		int tempo = (int) ((Math.random() * 301) + 5000);
 		int tiroteio = 0;
 		while(tiroteio < 3) {
+			int nota = (int)((Math.random()*11));
+			pontos += nota;
 			tiroteio += 1;
-			System.out.println("#" + idAtleta + " deu seu "+ tiroteio + "° tiro.");
+			System.out.println("#" + idAtleta + " deu seu "+ tiroteio + "° tiro e tirou nota " + nota);
 			try {
 				sleep(tempo);
 			} catch (InterruptedException e) {
@@ -70,8 +72,12 @@ public class CircuitoController extends Thread {
 			System.out.println("# " + idAtleta + " ja PERCOREU " + distanciaPercorrida + "m");
 		}
 		posChegada++;
-		System.out.println("#" + idAtleta + " foi o " + posChegada + "° a chegar e recebeu " + 	(pontos = pontos - (posChegada * 10)));
+		System.out.println("#" + idAtleta + " foi o " + posChegada + "° a chegar e recebeu " + 	(260 - (posChegada * 10)));
+		pontos += 260 - (posChegada * 10);
+	}
 
+	public int compareTo(CircuitoController o) {
+		return pontos > o.pontos?-1:1;
 	}
 	
 }
